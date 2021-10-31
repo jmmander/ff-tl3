@@ -1,4 +1,7 @@
+import SectionI from './section'
+
 export default interface BoardI {
   id: number
-  name: string
+  title: string
+  items: SectionI[]
 }
