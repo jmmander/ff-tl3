@@ -18,9 +18,18 @@ type ItemType = BoardI | CardI | SectionI
 
 const ItemTitle = styled.div``
 
-const Item = ({ item: { id, title, items }, onClick }: { item: ItemType; onClick: Function }) => {
+const Item = ({
+  item: { id, title },
+  handleSelect
+}: {
+  item: ItemType
+  handleSelect: Function
+}) => {
+  const handleClick = (id: number) => {
+    handleSelect(id)
+  }
   return (
-    <ItemContainer>
+    <ItemContainer onClick={() => handleClick(id)}>
       <ItemTitle>{title}</ItemTitle>
     </ItemContainer>
   )

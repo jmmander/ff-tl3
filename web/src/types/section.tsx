@@ -4,5 +4,5 @@ export default interface SectionI {
   id: number
   title: string
   board_title: string
-  items: CardI[]
+  cards: CardI[]
 }

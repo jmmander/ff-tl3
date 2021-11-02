@@ -19,7 +19,7 @@ import BoardI from '../../types/board'
 import SectionI from '../../types/section'
 import Item from '../item/index'
 
-type ItemsListType = BoardI[] | SectionI[]
+type ItemsListType = BoardI[] | CardI[]
 type ItemType = BoardI | SectionI | CardI
 type AcceptedTypes = 'board' | 'card'
 
@@ -27,30 +27,28 @@ const List = ({
   typeName,
   itemsList,
   onItemSubmit,
-  onClick
+  handleSelect,
+  title
 }: {
   typeName: AcceptedTypes
   itemsList: ItemsListType
   onItemSubmit: Function
-  onClick: Function
+  handleSelect: Function
+  title: string
 }) => {
   const [isTempItemActive, setIsTempItemActive] = useState(false)
   const [itemText, setItemText] = useState('')
-
-  let selectItem = (item_id: number) => {
-    return item_id
-  }
 
   return (
     <Wrapper>
       <WrappedList>
         <ListHeader>
-          <ListTitle>{typeName + 's'}</ListTitle>
+          <ListTitle>{title}</ListTitle>
         </ListHeader>
         <ItemsContainer>
-          {itemsList.length &&
+          {!!itemsList.length &&
             itemsList.map((item: ItemType) => {
-              return <Item key={item.id} item={item} onClick={() => selectItem(item.id)}></Item>
+              return <Item key={item.id} item={item} handleSelect={handleSelect}></Item>
             })}
         </ItemsContainer>
         {isTempItemActive ? (

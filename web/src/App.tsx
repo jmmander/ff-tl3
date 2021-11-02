@@ -20,27 +20,6 @@ export const BoardContainer = styled.div`
   align-items: flex-start;
   flex-wrap: wrap;
 `
-export const BoardList = styled.div``
-export const BoardListTitle = styled.div`
-  font-weight: bold;
-  font-size: 15px;
-  line-height: 18px;
-  cursor: grab;
-  width: 70%;
-  padding: 10px;
-`
-export const BoardListContainer = styled.div`
-  width: 280px;
-  background-color: #e3e3e3;
-  border-radius: 3px;
-  margin: 5px 5px;
-  padding: 10px;
-  position: relative;
-  display: inline-flex;
-  height: auto;
-  max-height: 90%;
-  flex-direction: column;
-`
 
 function App() {
   const [sections, setSections] = useState<SectionI[]>([])
@@ -49,12 +28,12 @@ function App() {
     {
       id: 1,
       title: 'board1',
-      items: [
+      sections: [
         {
           id: 1,
           title: 'Backlog',
           board_title: 'board1',
-          items: [
+          cards: [
             {
               id: 1,
               title: 'Card drag/drop',
@@ -81,37 +60,37 @@ function App() {
           id: 2,
           title: 'Ready for Development',
           board_title: 'board1',
-          items: []
+          cards: []
         },
         {
           id: 5,
           title: 'Done',
           board_title: 'board1',
-          items: []
+          cards: []
         },
         {
           id: 4,
           title: 'In Review',
           board_title: 'board1',
-          items: []
+          cards: []
         },
         {
           id: 3,
           title: 'In Progress',
           board_title: 'board1',
-          items: []
+          cards: []
         }
       ]
     },
     {
       id: 2,
       title: 'board2',
-      items: [
+      sections: [
         {
           id: 1,
           title: 'Backlog',
           board_title: 'board2',
-          items: [
+          cards: [
             {
               id: 1,
               title: 'Card 1',
@@ -138,25 +117,25 @@ function App() {
           id: 2,
           title: 'Ready for Development',
           board_title: 'board2',
-          items: []
+          cards: []
         },
         {
           id: 5,
           title: 'Done',
           board_title: 'board2',
-          items: []
+          cards: []
         },
         {
           id: 4,
           title: 'In Review',
           board_title: 'board2',
-          items: []
+          cards: []
         },
         {
           id: 3,
           title: 'In Progress',
           board_title: 'board2',
-          items: []
+          cards: []
         }
       ]
     }
@@ -185,7 +164,7 @@ function App() {
       for (let i = 0; i < sectionsClone.length; i++) {
         let section: SectionI = sectionsClone[i]
         if (section.id == sectionId) {
-          section.items.push({
+          section.cards.push({
             id: response.data.id,
             title: response.data.title,
             section_id: sectionId
@@ -226,34 +205,34 @@ function App() {
         id: 1,
         title: 'Backlog',
         board_title: 'board2',
-        items: []
+        cards: []
       },
       {
         id: 2,
         title: 'Ready for Development',
         board_title: 'board1',
-        items: []
+        cards: []
       },
       {
         id: 5,
         title: 'Done',
         board_title: 'board1',
-        items: []
+        cards: []
       },
       {
         id: 4,
         title: 'In Review',
         board_title: 'board1',
-        items: []
+        cards: []
       },
       {
         id: 3,
         title: 'In Progress',
         board_title: 'board1',
-        items: []
+        cards: []
       }
     ]
-    boardsClone.push({ id: id, title: title, items: sections })
+    boardsClone.push({ id: id, title: title, sections: sections })
     setBoards(boardsClone)
   }
   return (
@@ -263,77 +242,25 @@ function App() {
           itemsList={boards}
           typeName='board'
           onItemSubmit={onBoardSubmit}
-          onClick={handleBoardClick}
+          handleSelect={handleBoardClick}
+          title='Your Boards'
         ></List>
       </BoardContainer>
-      {!!sections.length && (
-        <BoardContainer>
-          <List
-            itemsList={sections}
-            typeName='card'
-            onItemSubmit={onCardSubmit}
-            onClick={handleCardClick}
-          ></List>
-        </BoardContainer>
-      )}
+      {!!activeBoard &&
+        !!activeBoard.sections.length &&
+        activeBoard.sections.map((section: SectionI) => {
+          return (
+            <List
+              itemsList={section.cards}
+              typeName='card'
+              onItemSubmit={onCardSubmit}
+              handleSelect={handleCardClick}
+              title={section.title}
+            ></List>
+          )
+        })}
     </React.Fragment>
   )
 }
-//TODO refactor to use section component
-// return (
-//   <React.Fragment>
-//     <BoardContainer>
-//       <Wrapper>
-//         <WrappedSection>
-//           <SectionHeader>
-//             <SectionTitle>My Boards</SectionTitle>
-//           </SectionHeader>
-//           <CardsContainer>
-//             {boards.map((board: BoardI) => (
-//               <Board board={board} key={board.id}></Board>
-//             ))}
-//           </CardsContainer>
-//           {isTempBoardActive ? (
-//             <CardComposerDiv>
-//               <ListCardComponent>
-//                 <ListCardDetails>
-//                   <ListCardTextArea
-//                     placeholder='Enter a name for the new board'
-//                     onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-//                       setBoardName(e.target.value)
-//                     }
-//                   />
-//                 </ListCardDetails>
-//               </ListCardComponent>
-//               <SubmitCardButtonDiv>
-//                 <SubmitCardButton
-//                   type='button'
-//                   value={boardName ? 'Add board' : 'Close'}
-//                   onClick={(e: React.MouseEvent<HTMLElement>) => {
-//                     e.preventDefault()
-//                     if (boardName) {
-//                       onBoardSubmit(boardName)
-//                     }
-//                     setIsTempBoardActive(false)
-//                   }}
-//                 />
-//               </SubmitCardButtonDiv>
-//             </CardComposerDiv>
-//           ) : (
-//             <AddCardButtonDiv onClick={() => setIsTempBoardActive(true)}>
-//               <AddCardButtonSpan>Add another board</AddCardButtonSpan>
-//             </AddCardButtonDiv>
-//           )}
-//         </WrappedSection>
-//       </Wrapper>
-//     </BoardContainer>
-
-//     <BoardContainer>
-//       {sections.map((section: SectionI) => {
-//         return <Section section={section} onCardSubmit={onCardSubmit}></Section>
-//       })}
-//     </BoardContainer>
-//   </React.Fragment>
-// )
 
 export default App
