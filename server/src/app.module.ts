@@ -12,12 +12,13 @@ import { SectionEntity } from './entities/Section'
 import { SectionsService } from './sections/sections.service'
 import { BoardsController } from './boards/boards.controller'
 import { BoardEntity } from './entities/Board'
+import { BoardsService } from './boards/boards.service'
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db',
+      host: 'localhost',
       port: 5432,
       username: 'technical',
       password: 'technical',
@@ -27,6 +28,6 @@ import { BoardEntity } from './entities/Board'
     TypeOrmModule.forFeature([CardEntity, SectionEntity, BoardEntity]),
   ],
   controllers: [AppController, SectionsController, CardsController, BoardsController],
-  providers: [AppService, CardsService, SectionsService],
+  providers: [AppService, CardsService, SectionsService, BoardsService],
 })
 export class AppModule {}

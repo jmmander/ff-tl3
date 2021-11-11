@@ -9,14 +9,14 @@ export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
   @Get()
-  index() {
-    return 'board controller'
+  getAllBoards(): Promise<BoardEntity[]> {
+    this.logger.log('GET /boards')
+    return this.boardsService.findAll()
   }
 
-  @Post('create')
+  @Post()
   addCard(@Body() board: { title: string }): Promise<BoardEntity> {
     this.logger.log('POST /boards')
-
     return this.boardsService.create(board)
   }
 }

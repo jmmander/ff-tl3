@@ -13,4 +13,11 @@ export class SectionsService {
   findAll(): Promise<SectionEntity[]> {
     return this.sectionsRepository.find({ relations: ['cards'] })
   }
+
+  create({ boardId, title }: { boardId: number; title: string }): Promise<SectionEntity> {
+    let section = new SectionEntity()
+    section.title = title
+    section.board_id = boardId
+    return this.sectionsRepository.save(section)
+  }
 }
