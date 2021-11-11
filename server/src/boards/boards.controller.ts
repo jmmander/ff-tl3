@@ -1,14 +1,22 @@
-import { Controller, Get, Post, Body } from '@nestjs/common'
+import { Controller, Get, Post, Body, Logger } from '@nestjs/common'
+import { BoardEntity } from 'src/entities/Board'
+import { BoardsService } from './boards.service'
 
 @Controller('boards')
 export class BoardsController {
+  private readonly logger = new Logger(BoardsController.name)
+
+  constructor(private boardsService: BoardsService) {}
+
   @Get()
   index() {
     return 'board controller'
   }
 
   @Post('create')
-  create(@Body() data): any {
-    return data
+  addCard(@Body() board: { title: string }): Promise<BoardEntity> {
+    this.logger.log('POST /boards')
+
+    return this.boardsService.create(board)
   }
 }
