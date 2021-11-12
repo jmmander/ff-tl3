@@ -10,6 +10,8 @@ export class SectionsService {
     private sectionsRepository: Repository<SectionEntity>
   ) {}
 
+  defaultSections = ['Backlog', 'Ready For Development', 'In progress', 'In review', 'Done']
+
   findAll(): Promise<SectionEntity[]> {
     return this.sectionsRepository.find({ relations: ['cards'] })
   }
@@ -19,5 +21,9 @@ export class SectionsService {
     section.title = title
     section.board_id = boardId
     return this.sectionsRepository.save(section)
+  }
+
+  addDefaultSections(boardId: number): Promise<SectionEntity[]> {
+    return Promise.all(this.defaultSections.map((title) => this.create({ boardId, title })))
   }
 }

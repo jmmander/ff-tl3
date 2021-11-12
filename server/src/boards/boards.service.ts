@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { BoardEntity } from '../entities/Board'
+import { SectionsService } from '../sections/sections.service'
 
 @Injectable()
 export class BoardsService {
   constructor(
     @InjectRepository(BoardEntity)
-    private boardsRepository: Repository<BoardEntity>
+    private boardsRepository: Repository<BoardEntity>,
+    private sectionService: SectionsService
   ) {}
 
   findAll(): Promise<BoardEntity[]> {
@@ -17,6 +19,18 @@ export class BoardsService {
   create({ title }: { title: string }): Promise<BoardEntity> {
     let board = new BoardEntity()
     board.title = title
-    return this.boardsRepository.save(board)
+    let newBoard = this.boardsRepository.save(board)
+    return newBoard
+      .then((response) => {
+        return this.sectionService.addDefaultSections(response.id)
+      })
+      .then(() => {
+        return this.boardsRepository.findOne({
+          relations: ['sections', 'sections.cards'],
+          where: {
+            title: title,
+          },
+        })
+      })
   }
 }
