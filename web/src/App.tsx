@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import axios from 'axios'
 
 import SectionI from './types/section'
-import BoardI from './types/board';
-
+import BoardI from './types/board'
 import List from './components/list'
 
 import './App.css'
@@ -36,128 +35,8 @@ export const ActiveBoardError = styled.div`
 `
 
 function App() {
-  const [sections, setSections] = useState<SectionI[]>([])
-
-  const initalBoardList: BoardI[] = [
-    {
-      id: 1,
-      title: 'board1',
-      sections: [
-        {
-          id: 1,
-          title: 'Backlog',
-          board_title: 'board1',
-          cards: [
-            {
-              id: 1,
-              title: 'Card drag/drop',
-              section_id: 1
-            },
-            {
-              id: 2,
-              title: 'Card details',
-              section_id: 1
-            },
-            {
-              id: 3,
-              title: 'Multiple boards',
-              section_id: 1
-            },
-            {
-              id: 4,
-              title: 'new title',
-              section_id: 1
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Ready for Development',
-          board_title: 'board1',
-          cards: []
-        },
-        {
-          id: 5,
-          title: 'Done',
-          board_title: 'board1',
-          cards: []
-        },
-        {
-          id: 4,
-          title: 'In Review',
-          board_title: 'board1',
-          cards: []
-        },
-        {
-          id: 3,
-          title: 'In Progress',
-          board_title: 'board1',
-          cards: []
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: 'board2',
-      sections: [
-        {
-          id: 1,
-          title: 'Backlog',
-          board_title: 'board2',
-          cards: [
-            {
-              id: 1,
-              title: 'Card 1',
-              section_id: 1
-            },
-            {
-              id: 2,
-              title: 'Card 2',
-              section_id: 1
-            },
-            {
-              id: 3,
-              title: 'Card 3',
-              section_id: 1
-            },
-            {
-              id: 4,
-              title: 'Card 4',
-              section_id: 1
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Ready for Development',
-          board_title: 'board2',
-          cards: []
-        },
-        {
-          id: 5,
-          title: 'Done',
-          board_title: 'board2',
-          cards: []
-        },
-        {
-          id: 4,
-          title: 'In Review',
-          board_title: 'board2',
-          cards: []
-        },
-        {
-          id: 3,
-          title: 'In Progress',
-          board_title: 'board2',
-          cards: []
-        }
-      ]
-    }
-  ]
-
-  type acceptableBoardTypes = BoardI | null
-  const [boards, setBoards] = useState<BoardI[]>(initalBoardList)
-  const [activeBoard, setActiveBoard] = useState<acceptableBoardTypes>(null)
+  const [boards, setBoards] = useState<BoardI[]>([])
+  const [activeBoard, setActiveBoard] = useState<BoardI>(boards[0])
 
   useEffect(() => {
     axios
@@ -166,7 +45,7 @@ function App() {
         console.log(response.data)
         const boardsResponse = response.data
         setBoards(boardsResponse)
-    })
+      })
       .catch((error) => {
         console.log(error)
       })
@@ -192,16 +71,9 @@ function App() {
           setBoards(
             boards.map((board) => (board.id === activeBoardClone.id ? activeBoardClone : board))
           )
-    }
-      
-      
-
-    let sectionsClone: SectionI[] = [...sections]
-    for (let i = 0; i < sectionsClone.length; i++) {
-      let section: SectionI = sectionsClone[i]
-      section.cards.push({ id: id, title: title, section_id: sectionId })
-      setSections(sectionsClone)
-    }
+        }
+      }
+    })
   }
 
   const handleBoardClick = (board_id: number) => {
@@ -221,7 +93,7 @@ function App() {
     })
       .then((response) => {
         console.log(response.data)
-    let boardsClone = [...boards]
+        let boardsClone = [...boards]
         boardsClone.push({
           id: response.data.id,
           title: response.data.title,
@@ -234,6 +106,7 @@ function App() {
         console.log(error.data)
       })
   }
+
   return (
     <React.Fragment>
       <BoardContainer>
