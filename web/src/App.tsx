@@ -243,6 +243,7 @@ function App() {
           onItemSubmit={onBoardSubmit}
           handleSelect={handleBoardClick}
           title='Your Boards'
+          id={-1}
         ></List>
       </BoardContainer>
       <BoardContainer>
@@ -257,6 +258,7 @@ function App() {
                   onItemSubmit={onCardSubmit}
                   handleSelect={handleCardClick}
                   title={section.title}
+                  id={section.id}
                 ></List>
               )
             })}

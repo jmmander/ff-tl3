@@ -28,13 +28,15 @@ const List = ({
   itemsList,
   onItemSubmit,
   handleSelect,
-  title
+  title,
+  id
 }: {
   typeName: AcceptedTypes
   itemsList: ItemsListType
   onItemSubmit: Function
   handleSelect: Function
   title: string
+  id: number
 }) => {
   const [isTempItemActive, setIsTempItemActive] = useState(false)
   const [itemText, setItemText] = useState('')
@@ -46,7 +48,8 @@ const List = ({
           <ListTitle>{title}</ListTitle>
         </ListHeader>
         <ItemsContainer>
-          {!!itemsList.length &&
+          {itemsList &&
+            !!itemsList.length &&
             itemsList.map((item: ItemType) => {
               return <Item key={item.id} item={item} handleSelect={handleSelect}></Item>
             })}
@@ -71,7 +74,7 @@ const List = ({
                   e.preventDefault()
 
                   if (itemText) {
-                    onItemSubmit(itemText)
+                    onItemSubmit(id, itemText)
                   }
                   setIsTempItemActive(false)
                 }}
