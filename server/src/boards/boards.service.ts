@@ -11,7 +11,7 @@ export class BoardsService {
   ) {}
 
   findAll(): Promise<BoardEntity[]> {
-    return this.boardsRepository.find({ relations: ['sections'] })
+    return this.boardsRepository.find({ relations: ['sections', 'sections.cards'] })
   }
 
   create({ title }: { title: string }): Promise<BoardEntity> {
