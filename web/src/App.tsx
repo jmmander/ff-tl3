@@ -106,7 +106,6 @@ function App() {
           data: { title }
         })
           .then((response) => {
-            console.log(response.data)
             let boardsClone = [...boards]
             boardsClone.push({
               id: response.data.id,
@@ -116,8 +115,6 @@ function App() {
           })
           .catch((error) => {
             console.log(error)
-            console.log(error.response)
-            console.log(error.data)
           })
   }
 
