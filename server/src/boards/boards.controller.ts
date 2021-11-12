@@ -15,7 +15,7 @@ export class BoardsController {
   }
 
   @Post()
-  addCard(@Body() board: { title: string }): Promise<BoardEntity> {
+  addBoard(@Body() board: { title: string }): Promise<BoardEntity> {
     this.logger.log('POST /boards')
     return this.boardsService.create(board)
   }
