@@ -110,8 +110,9 @@ function App() {
             boardsClone.push({
               id: response.data.id,
               title: response.data.title,
-              sections: []
+              sections: response.data.sections
             })
+            setBoards(boardsClone)
           })
           .catch((error) => {
             console.log(error)
