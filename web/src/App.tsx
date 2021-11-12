@@ -173,26 +173,25 @@ function App() {
   }, [])
 
   const onCardSubmit = (sectionId: number, title: string) => {
-    // axios({
-    //   method: 'post',
-    //   url: 'http://localhost:3001/cards',
-    //   data: { sectionId, title }
-    // }).then((response) => {
-    //   let sectionsClone: SectionI[] = [...sections]
-    //   for (let i = 0; i < sectionsClone.length; i++) {
-    //     let section: SectionI = sectionsClone[i]
-    //     if (section.id == sectionId) {
-    //       section.cards.push({
-    //         id: response.data.id,
-    //         title: response.data.title,
-    //         section_id: sectionId
-    //       })
-    //       setSections(sectionsClone)
-    //     }
-    //   }
-    // }
-    console.log('card submitted')
-
+    axios({
+      method: 'post',
+      url: 'http://localhost:3001/cards',
+      data: { sectionId, title }
+    }).then((response) => {
+      let activeBoardClone: BoardI = activeBoard
+      let sections: SectionI[] = [...activeBoardClone.sections]
+      for (let i = 0; i < activeBoardClone.sections.length; i++) {
+        let section: SectionI = sections[i]
+        if (section.id === sectionId) {
+          section.cards.push({
+            id: response.data.id,
+            title: response.data.title,
+            section_id: sectionId
+          })
+          setActiveBoard(activeBoardClone)
+          setBoards(
+            boards.map((board) => (board.id === activeBoardClone.id ? activeBoardClone : board))
+          )
     }
       
       
