@@ -213,56 +213,26 @@ function App() {
     console.log('i clicked a card')
   }
 
-  const onBoardSubmit = (title: string) => {
-    // axios({
-    //   method: 'post',
-    //   url: 'http://localhost:3001/boards',
-    //   data: { title }
-    // }).then((response) => {
-    //   let boardsClone = [...boards]
-    //   boardsClone.push({
-    //     id: response.data.id,
-    //     title: response.data.title,
-    //     items: response.data.sections
-    //   })
-    //   setBoards(boardsClone)
-    // })
+  const onBoardSubmit = (id: number, title: string) => {
+    axios({
+      method: 'post',
+      url: 'http://localhost:3001/boards',
+      data: { title }
+    })
+      .then((response) => {
+        console.log(response.data)
     let boardsClone = [...boards]
-    const id = Math.max(...boardsClone.map((o) => o.id), 0) + 1
-    const sections = [
-      {
-        id: 1,
-        title: 'Backlog',
-        board_title: 'board2',
-        cards: []
-      },
-      {
-        id: 2,
-        title: 'Ready for Development',
-        board_title: 'board1',
-        cards: []
-      },
-      {
-        id: 5,
-        title: 'Done',
-        board_title: 'board1',
-        cards: []
-      },
-      {
-        id: 4,
-        title: 'In Review',
-        board_title: 'board1',
-        cards: []
-      },
-      {
-        id: 3,
-        title: 'In Progress',
-        board_title: 'board1',
-        cards: []
-      }
-    ]
-    boardsClone.push({ id: id, title: title, sections: sections })
-    setBoards(boardsClone)
+        boardsClone.push({
+          id: response.data.id,
+          title: response.data.title,
+          sections: []
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+        console.log(error.response)
+        console.log(error.data)
+      })
   }
   return (
     <React.Fragment>
