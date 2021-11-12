@@ -30,26 +30,35 @@ export const ActiveBoardTitle = styled.div`
   font-size: 2em;
 `
 
-export const ActiveBoardError = styled.div`
-  color: white;
+export const BoardError = styled.div`
+  color: orange;
 `
 
 function App() {
   const [boards, setBoards] = useState<BoardI[]>([])
   const [activeBoard, setActiveBoard] = useState<BoardI>(boards[0])
+  const [boardError, setBoardError] = useState<string>('')
 
   useEffect(() => {
     axios
       .get('http://localhost:3001/boards')
       .then((response) => {
-        console.log(response.data)
-        const boardsResponse = response.data
-        setBoards(boardsResponse)
+        setBoards(response.data)
       })
       .catch((error) => {
         console.log(error)
       })
   }, [])
+
+  useEffect(() => {
+    if (!activeBoard) {
+      setBoardError('No board selected')
+    } else if (!!activeBoard && !activeBoard.sections.length) {
+      setBoardError('There is nothing to display. Try adding sections to the board')
+    } else {
+      setBoardError('')
+    }
+  }, [activeBoard])
 
   const onCardSubmit = (sectionId: number, title: string) => {
     axios({
@@ -82,29 +91,34 @@ function App() {
   }
 
   const handleCardClick = () => {
+    //to be implemented as part of card details
     console.log('i clicked a card')
   }
 
   const onBoardSubmit = (id: number, title: string) => {
-    axios({
-      method: 'post',
-      url: 'http://localhost:3001/boards',
-      data: { title }
+    boards.find((board) => {
+      return board.title.toLowerCase() === title.toLowerCase()
     })
-      .then((response) => {
-        console.log(response.data)
-        let boardsClone = [...boards]
-        boardsClone.push({
-          id: response.data.id,
-          title: response.data.title,
-          sections: []
+      ? setBoardError('The board name must be unique. Please try another name.')
+      : axios({
+          method: 'post',
+          url: 'http://localhost:3001/boards',
+          data: { title }
         })
-      })
-      .catch((error) => {
-        console.log(error)
-        console.log(error.response)
-        console.log(error.data)
-      })
+          .then((response) => {
+            console.log(response.data)
+            let boardsClone = [...boards]
+            boardsClone.push({
+              id: response.data.id,
+              title: response.data.title,
+              sections: []
+            })
+          })
+          .catch((error) => {
+            console.log(error)
+            console.log(error.response)
+            console.log(error.data)
+          })
   }
 
   return (
@@ -137,10 +151,7 @@ function App() {
             })}
           </ActiveBoardView>
         )}
-        {!activeBoard && <ActiveBoardError>Please select a board</ActiveBoardError>}
-        {!!activeBoard && !activeBoard.sections.length && (
-          <ActiveBoardError>This board has no data to display</ActiveBoardError>
-        )}
+        {!!boardError && <BoardError>{boardError}</BoardError>}
       </BoardContainer>
     </React.Fragment>
   )
