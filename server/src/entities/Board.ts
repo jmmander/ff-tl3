@@ -6,7 +6,7 @@ export class BoardEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ default: '' })
+  @Column({ unique: true })
   title: string
 
   @OneToMany(() => SectionEntity, (section) => section.board)

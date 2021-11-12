@@ -7,10 +7,10 @@ export class SectionEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ default: '' })
+  @Column({})
   title: string
 
-  @Column({ name: 'board_id', default: 1 })
+  @Column({ name: 'board_id' })
   board_id: number
 
   @OneToMany(() => CardEntity, (card) => card.section)
@@ -18,5 +18,6 @@ export class SectionEntity {
   cards: CardEntity[]
 
   @ManyToOne(() => BoardEntity, (board) => board.sections)
+  @JoinColumn({ name: 'board_id' })
   board: BoardEntity
 }
