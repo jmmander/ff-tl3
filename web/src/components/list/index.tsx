@@ -59,7 +59,7 @@ const List = ({
             <ListItemComponent>
               <ListItemDetails>
                 <ListItemTextArea
-                  placeholder='Enter a title for the new Item'
+                  placeholder={'Enter a title for the new ' + typeName}
                   onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
                     setItemText(e.target.value)
                   }
