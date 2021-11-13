@@ -9,7 +9,7 @@ import List from './components/list'
 import './App.css'
 import React from 'react'
 
-export const BoardContainer = styled.div`
+export const PageContainer = styled.div`
   display: flex;
   flex-direction: row;
   color: #393939;
@@ -53,8 +53,6 @@ function App() {
   useEffect(() => {
     if (!activeBoard) {
       setBoardError('No board selected')
-    } else if (!!activeBoard && !activeBoard.sections.length) {
-      setBoardError('There is nothing to display. Try adding sections to the board')
     } else {
       setBoardError('')
     }
@@ -65,28 +63,32 @@ function App() {
       method: 'post',
       url: 'http://localhost:3001/cards',
       data: { sectionId, title }
-    }).then((response) => {
-      let activeBoardClone: BoardI = activeBoard
-      let sections: SectionI[] = [...activeBoardClone.sections]
-      for (let i = 0; i < activeBoardClone.sections.length; i++) {
-        let section: SectionI = sections[i]
-        if (section.id === sectionId) {
-          section.cards.push({
-            id: response.data.id,
-            title: response.data.title,
-            section_id: sectionId
-          })
-          setActiveBoard(activeBoardClone)
-          setBoards(
-            boards.map((board) => (board.id === activeBoardClone.id ? activeBoardClone : board))
-          )
-        }
-      }
     })
+      .then((response) => {
+        let activeBoardClone: BoardI = activeBoard
+        let sections: SectionI[] = [...activeBoardClone.sections]
+        for (let i = 0; i < activeBoardClone.sections.length; i++) {
+          let section: SectionI = sections[i]
+          if (section.id === sectionId) {
+            section.cards.push({
+              id: response.data.id,
+              title: response.data.title,
+              section_id: sectionId
+            })
+            setActiveBoard(activeBoardClone)
+            setBoards(
+              boards.map((board) => (board.id === activeBoardClone.id ? activeBoardClone : board))
+            )
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const handleBoardClick = (board_id: number) => {
-    const selected_board = boards.filter((board) => board.id === board_id)[0]
+    const selected_board: BoardI = boards.filter((board) => board.id === board_id)[0]
     setActiveBoard(selected_board)
   }
 
@@ -96,7 +98,7 @@ function App() {
   }
 
   const onBoardSubmit = (id: number, title: string) => {
-    boards.find((board) => {
+    boards.find((board: BoardI) => {
       return board.title.toLowerCase() === title.toLowerCase()
     })
       ? setBoardError('The board name must be unique. Please try another name.')
@@ -106,7 +108,7 @@ function App() {
           data: { title }
         })
           .then((response) => {
-            let boardsClone = [...boards]
+            let boardsClone: BoardI[] = [...boards]
             boardsClone.push({
               id: response.data.id,
               title: response.data.title,
@@ -121,7 +123,7 @@ function App() {
 
   return (
     <React.Fragment>
-      <BoardContainer>
+      <PageContainer>
         <List
           itemsList={boards}
           typeName='board'
@@ -130,8 +132,8 @@ function App() {
           title='Your Boards'
           id={-1}
         ></List>
-      </BoardContainer>
-      <BoardContainer>
+      </PageContainer>
+      <PageContainer>
         {!!activeBoard && !!activeBoard.sections.length && (
           <ActiveBoardView>
             <ActiveBoardTitle>{activeBoard.title}</ActiveBoardTitle>
@@ -150,7 +152,7 @@ function App() {
           </ActiveBoardView>
         )}
         {!!boardError && <BoardError>{boardError}</BoardError>}
-      </BoardContainer>
+      </PageContainer>
     </React.Fragment>
   )
 }

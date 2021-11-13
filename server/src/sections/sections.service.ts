@@ -10,7 +10,13 @@ export class SectionsService {
     private sectionsRepository: Repository<SectionEntity>
   ) {}
 
-  defaultSections = ['Backlog', 'Ready For Development', 'In progress', 'In review', 'Done']
+  defaultSections: string[] = [
+    'Backlog',
+    'Ready For Development',
+    'In progress',
+    'In review',
+    'Done',
+  ]
 
   findAll(): Promise<SectionEntity[]> {
     return this.sectionsRepository.find({ relations: ['cards'] })
