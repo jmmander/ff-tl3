@@ -47,4 +47,12 @@ describe('BoardsController', () => {
     jest.spyOn(service, 'create').mockImplementation(() => Promise.resolve(board))
     expect(await controller.addBoard({ title: 'test' })).toBe(board)
   })
+
+  it('should call findAll on board repository', async () => {
+    const board = new BoardEntity()
+    const boardList = [board]
+    board.title = 'test'
+    jest.spyOn(service, 'findAll').mockImplementation(() => Promise.resolve(boardList))
+    expect(await controller.getAllBoards()).toBe(boardList)
+  })
 })

@@ -4,6 +4,7 @@ import { render, cleanup, screen, fireEvent } from '@testing-library/react'
 
 import App from './App'
 import { act } from 'react-dom/test-utils'
+import userEvent from '@testing-library/user-event'
 
 jest.mock('axios')
 
@@ -112,7 +113,7 @@ describe('<App />', () => {
     expect(cardText.nodeName).toBe('DIV')
   })
 
-  it('opens text input form on click of "add board"', async () => {
+  it('opens text input form on click of "add board" and checks for duplicate boards', async () => {
     render(<App />)
 
     const addNewBoard = await screen.findByText('Add another')
@@ -120,6 +121,19 @@ describe('<App />', () => {
       fireEvent.click(addNewBoard)
     })
     const inputText = screen.queryByPlaceholderText('Enter a title for the new board')
+    const addBoardButton = await screen.findByRole('button')
+
     expect(inputText.nodeName).toBe('TEXTAREA')
+    expect(addBoardButton.nodeName).toBe('INPUT')
+
+    userEvent.type(inputText, 'Board 1')
+    act(() => {
+      fireEvent.click(addBoardButton)
+    })
+
+    const duplicateErrorText = await screen.findByText(
+      'The board name must be unique. Please try another name.'
+    )
+    expect(duplicateErrorText.nodeName).toBe('DIV')
   })
 })
