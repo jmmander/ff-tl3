@@ -38,4 +38,20 @@ describe('SectionController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined()
   })
+
+  it('should call findAll on sections repository', async () => {
+    const section = new SectionEntity()
+    const sectionList = [section]
+    section.title = 'test'
+    jest.spyOn(service, 'findAll').mockImplementation(() => Promise.resolve(sectionList))
+    expect(await controller.getAllSections()).toBe(sectionList)
+  })
+
+  it('should call create on sections repository', async () => {
+    const section = new SectionEntity()
+    section.title = 'test'
+    section.board_id = 1
+    jest.spyOn(service, 'create').mockImplementation(() => Promise.resolve(section))
+    expect(await controller.addSection({ boardId: 1, title: 'test' })).toBe(section)
+  })
 })

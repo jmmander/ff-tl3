@@ -5,8 +5,8 @@ export default {
   username: 'technical',
   password: 'technical',
   database: 'technical',
-  entities: ['./entities/*.ts'],
-  migrations: ['./migrations/*.ts'],
+  entities: ['src/entities/*.ts'],
+  migrations: ['src/migrations/*.ts'],
   cli: {
     migrationsDir: 'migrations',
   },
